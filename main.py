@@ -19,7 +19,7 @@ import cnnAndMlp
 
 from torch.utils.tensorboard import SummaryWriter
 
-
+# device check
 print(f"Is GPU available? {torch.cuda.is_available()}")
 print(f"Number of available devices: {torch.cuda.device_count()}")
 print(f"Index of current device: {torch.cuda.current_device()}")
@@ -58,9 +58,9 @@ train_loader = data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shu
 train_loader_at_eval = data.DataLoader(dataset=train_dataset, batch_size=2*BATCH_SIZE, shuffle=False)
 test_loader = data.DataLoader(dataset=test_dataset, batch_size=2*BATCH_SIZE, shuffle=False)
 
-writer = SummaryWriter('runs/experiment_55')
+writer = SummaryWriter('runs/experiment_56')
 
-model = cnnAndMlp.CustomCNN2(in_channels=n_channels, num_classes=n_classes)
+model = cnnAndMlp.CustomCNN1(in_channels=n_channels, num_classes=n_classes)
     
 # define loss function and optimizer
 criterion = nn.CrossEntropyLoss()
@@ -93,7 +93,7 @@ def trainingFnc():
         epoch_loss = 0
         n_batches = len(train_dataset) // BATCH_SIZE
         model.train()
-        
+        i = 0
         for inputs, targets in tqdm(train_loader):
             # forward + backward + optimize
             optimizer.zero_grad()
@@ -108,12 +108,13 @@ def trainingFnc():
             
             loss.backward()
             optimizer.step()
-            writer.add_scalar('training loss (batch)', loss.item(), epoch * len(train_loader) + i)
+            writer.add_scalar('training loss (batch)', loss.item(), epoch * len(train_loader)+i)
 
             avg_epoch_loss = epoch_loss / len(train_loader)
             accuracy_train = running_corrects / total
             writer.add_scalar('training loss (epoch)', avg_epoch_loss, epoch)
             writer.add_scalar('training accuracy (epoch)', accuracy_train, epoch)
+            i += 1
 
     writer.add_hparams(
     {
