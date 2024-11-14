@@ -102,19 +102,78 @@ class CustomCNN2(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.fc(x)
         return x
-class CustomMLP(torch.nn.Module):
-    def __init__(self,in_channels, num_classes):
+    
+class CustomCNN4(nn.Module):
+    def __init__(self):
+        super(CustomCNN, self).__init__()  # input 28x28
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(1, 10, kernel_size=5), # 24x24 1 input (obrazok) 10 neuronov
+            nn.ReLU(),
+            nn.BatchNorm2d(10), # 10 neuronov
+            nn.MaxPool2d(kernel_size=2, stride=2), #12x12
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(10, 20, kernel_size=5), #10 vstupov (z predosleho layeru neurony) #20 neuronov 8x8 size
+            nn.ReLU(),
+            nn.BatchNorm2d(20),
+            nn.MaxPool2d(kernel_size=2, stride=2), #4x4
+        )
+
+        self.fc_layers = nn.Sequential(
+            nn.Linear(320, 100), # 20x4x4 4x4 v kazdom neurone, je ich 20 tych neuronov duh
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(100, 1),  # Output a single logit for binary classification
+        )
+
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.conv2(out)
+        out = out.view(x.shape[0], -1)
+        out = self.fc_layers(out)
+        return out
+
+class CustomMLP(nn.Module):
+    def __init__(self):
         super(CustomMLP, self).__init__()
         self.fc_layers = nn.Sequential(
             nn.Linear(28*28, 100),
-            nn.Sigmoid(),
+            nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(100, 2),
-            nn.ReLU()
+            nn.Linear(100, 1),  # Output a single logit for binary classification
         )
 
     def forward(self, x):
         out = x.view(x.shape[0], -1)
         out = self.fc_layers(out)
-        out = F.softmax(out)
+        return out
+
+class CustomCNN4(nn.Module):
+    def __init__(self):
+        super(CustomCNN, self).__init__()  # input 28x28
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(1, 10, kernel_size=5), # 24x24 1 input (obrazok) 10 neuronov
+            nn.ReLU(),
+            nn.BatchNorm2d(10), # 10 neuronov
+            nn.MaxPool2d(kernel_size=2, stride=2), #12x12
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(10, 20, kernel_size=5), #10 vstupov (z predosleho layeru neurony) #20 neuronov 8x8 size
+            nn.ReLU(),
+            nn.BatchNorm2d(20),
+            nn.MaxPool2d(kernel_size=2, stride=2), #4x4
+        )
+
+        self.fc_layers = nn.Sequential(
+            nn.Linear(320, 100), # 20x4x4 4x4 v kazdom neurone, je ich 20 tych neuronov duh
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(100, 1),  # Output a single logit for binary classification
+        )
+
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.conv2(out)
+        out = out.view(x.shape[0], -1)
+        out = self.fc_layers(out)
         return out

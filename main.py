@@ -208,3 +208,7 @@ def visualize_filters(model):
             break  # Only visualize the first convolutional layer
 
 visualize_filters(model)
+
+
+optimizer = optim.Adam(model.parameters(), lr=lr)
+
