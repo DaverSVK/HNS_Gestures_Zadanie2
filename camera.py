@@ -5,6 +5,7 @@ from torchvision import transforms
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import time
 
 class CNN6Conv6FC(nn.Module):
     def __init__(self, num_classes):
@@ -54,7 +55,7 @@ class CNN6Conv6FC(nn.Module):
         return x
 
 model = CNN6Conv6FC(num_classes=5)
-state_dict = torch.load(r'C:\Users\david\Desktop\Code\DNN\Projekt_2\BestModel.pt')
+state_dict = torch.load(r'C:\Users\david\Desktop\Code\DNN\Projekt_2\BestModel2.pt')
 model.load_state_dict(state_dict)
 model.eval() 
 
@@ -66,11 +67,12 @@ preprocess = transforms.Compose([
     transforms.Normalize(mean=[0.485], std=[0.229]),
 ])
 
-camera_index = 1
-cap = cv2.VideoCapture(camera_index)
+
+video_path = 'path/to/your/video.mp4' 
+cap = cv2.VideoCapture(r'C:\Users\david\Desktop\Code\DNN\Projekt_2\videoTest.mp4')
 
 if not cap.isOpened():
-    print("Error: Unable to access the camera")
+    print("Error: Unable to open the video file")
     exit()
 
 print("Press 'q' to exit")
@@ -78,25 +80,42 @@ print("Press 'q' to exit")
 while True:
     ret, frame = cap.read()
     if not ret:
-        print("Error: Unable to capture frame")
+        print("End of video or unable to capture frame")
         break
 
-    input_tensor = preprocess(frame).unsqueeze(0)  
+    # Transform frame
+    transformed_frame = preprocess(frame).unsqueeze(0)  # Add batch dimension
 
+    # Perform inference
     with torch.no_grad():
-        outputs = model(input_tensor)
+        outputs = model(transformed_frame)
 
     predicted_class = torch.argmax(outputs, dim=1).item()
 
-    class_labels = {0: 'Neutral', 1: 'OcclusionEyes', 2: 'OcclusionMouth', 3: 'OpenMouth', 3: 'Smile'} 
+    # Map prediction to label
+    class_labels = {0: 'Neutral', 1: 'OcclusionEyes', 2: 'OcclusionMouth', 3: 'OpenMouth', 4: 'Smile'} 
     label = class_labels.get(predicted_class, 'Unknown')
 
+    # Add label to the frame
     cv2.putText(frame, label, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
+    # Convert transformed tensor back to NumPy array for display
+    transformed_image = transformed_frame.squeeze(0).numpy()
+    transformed_image = transformed_image[0]  # Grayscale single channel
+    transformed_image = (transformed_image * 0.229 + 0.485) * 255  # De-normalize
+    transformed_image = transformed_image.astype(np.uint8)
+
+    # Show transformed image
+    cv2.imshow('Transformed Image', transformed_image)
+
+    # Show original frame with prediction
     cv2.imshow('Object Detection', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    # Limit to 10 fps
+
+    if cv2.waitKey(10) & 0xFF == ord('q'):
         break
 
+# Release resources
 cap.release()
 cv2.destroyAllWindows()
