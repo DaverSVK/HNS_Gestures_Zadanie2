@@ -1,0 +1,7 @@
+ID: 28
+Gender: Male
+Year of born: 1985
+Ethnicity: White
+Glasses: No
+section 1, Capture time: 2012-06-11 16:29:49
+section 2, Capture time: 2012-06-20 11:51:03

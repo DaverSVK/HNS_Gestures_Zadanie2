@@ -1,0 +1,7 @@
+ID: 46
+Gender: Male
+Year of born: 1985
+Ethnicity: White
+Glasses: Yes
+section 1, Capture time: 2012-06-18 12:02:23
+section 2, Capture time: 2012-06-26 15:13:06

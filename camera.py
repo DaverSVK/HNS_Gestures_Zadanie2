@@ -7,55 +7,60 @@ import torch.nn as nn
 import torch.nn.functional as F
 import time
 
+
 class CNN6Conv6FC(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, num_blocks):
         super(CNN6Conv6FC, self).__init__()
         self.num_classes = num_classes
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=1)
-        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, stride=1, padding=1)
-        self.conv5 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, stride=1, padding=1)
-        self.conv6 = nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, stride=1, padding=1)
-        
-        self.bn1 = nn.BatchNorm2d(32)
-        self.bn2 = nn.BatchNorm2d(64)
-        self.bn3 = nn.BatchNorm2d(128)
-        self.bn4 = nn.BatchNorm2d(256)
-        self.bn5 = nn.BatchNorm2d(512)
-        self.bn6 = nn.BatchNorm2d(512)
-        
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
-        
-        self.fc1 = nn.Linear(512 * 3 * 3, 1024)  
-        self.fc2 = nn.Linear(1024, 512)
-        self.fc3 = nn.Linear(512, 256)
-        self.fc4 = nn.Linear(256, 128)
-        self.fc5 = nn.Linear(128, 64)
-        self.fc6 = nn.Linear(64, num_classes)  
+        self.conv0 = nn.Conv2d(in_channels=1,  out_channels=64, kernel_size=3, stride=1, padding=1)
+
+        preserve = []
+        collapse = []
+        for i in range(num_blocks):
+            sq = nn.Sequential(
+                     nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, stride=1, padding=2),
+                     nn.BatchNorm2d(64),
+                     nn.LeakyReLU(negative_slope=0.01, inplace=True))
+            preserve.append(sq)
+            collapse.append(
+                nn.Sequential(
+                    nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, stride=2, padding=1),
+                    nn.MaxPool2d(kernel_size=5, stride=1, padding=0))
+            )
+
+            
+        self.preserve = nn.ModuleList(preserve)
+        self.collapse = nn.ModuleList(collapse)
+
+        self.classifier = nn.Sequential(
+            nn.LazyLinear(1024),
+            nn.LeakyReLU(negative_slope=0.01, inplace=True),
+            nn.Linear(1024, 512),
+            nn.LeakyReLU(negative_slope=0.01, inplace=True),
+            nn.Linear(512, 256),
+            nn.LeakyReLU(negative_slope=0.01, inplace=True),
+            nn.Linear(256, 128),
+            nn.LeakyReLU(negative_slope=0.01, inplace=True),
+            nn.Linear(128, 64),
+            nn.LeakyReLU(negative_slope=0.01, inplace=True),
+            nn.Linear(64, num_classes) 
+        )
         
     def forward(self, x):
-        x = self.pool(F.relu(self.bn1(self.conv1(x))))
-        x = self.pool(F.relu(self.bn2(self.conv2(x))))
-        x = self.pool(F.relu(self.bn3(self.conv3(x))))
-        x = self.pool(F.relu(self.bn4(self.conv4(x))))
-        x = self.pool(F.relu(self.bn5(self.conv5(x))))
-        x = self.pool(F.relu(self.bn6(self.conv6(x))))
-        
-        x = x.view(x.size(0), -1)
-        
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        x = F.relu(self.fc5(x))
-        
-        x = self.fc6(x)
+        x = self.conv0(x)
+
+        for pr, cl in zip(self.preserve, self.collapse):
+            x = pr(x) + x
+            x = cl(x)
+
+        x = x.view(x.size(0), -1) 
+        x = self.classifier(x)
         
         return x
 
-model = CNN6Conv6FC(num_classes=5)
-state_dict = torch.load(r'C:\Users\david\Desktop\Code\DNN\Projekt_2\BestModel2.pt')
+
+model = CNN6Conv6FC(num_classes=5, num_blocks=4)
+state_dict = torch.load(r'./model_2.pt')
 model.load_state_dict(state_dict)
 model.eval() 
 
@@ -67,9 +72,7 @@ preprocess = transforms.Compose([
     transforms.Normalize(mean=[0.485], std=[0.229]),
 ])
 
-
-video_path = 'path/to/your/video.mp4' 
-cap = cv2.VideoCapture(r'C:\Users\david\Desktop\Code\DNN\Projekt_2\videoTest.mp4')
+cap = cv2.VideoCapture(r'./videoTest.mp4')
 
 if not cap.isOpened():
     print("Error: Unable to open the video file")

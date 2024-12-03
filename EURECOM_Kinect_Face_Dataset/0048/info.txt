@@ -1,0 +1,7 @@
+ID: 48
+Gender: Male
+Year of born: 1974
+Ethnicity: White
+Glasses: No
+section 1, Capture time: 2012-06-18 14:53:38
+section 2, Capture time: 2012-06-25 10:58:41

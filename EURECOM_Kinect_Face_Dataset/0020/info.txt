@@ -1,0 +1,7 @@
+ID: 20
+Gender: Male
+Year of born: 1983
+Ethnicity: Asian(Chinese)
+Glasses: Yes
+section 1, Capture time: 2012-06-11 14:53:21
+section 2, Capture time: 2012-06-20 12:30:50
