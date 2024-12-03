@@ -1,7 +1,0 @@
-ID: 1
-Gender: Male
-Year of born: 1979
-Ethnicity: Black
-Glasses: No
-section 1, Capture time: 2012-06-11 11:02:39
-section 2, Capture time: 2012-06-18 15:57:10

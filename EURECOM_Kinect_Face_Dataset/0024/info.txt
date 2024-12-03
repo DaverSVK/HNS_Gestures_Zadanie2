@@ -1,7 +1,0 @@
-ID: 24
-Gender: Male
-Year of born: 1984
-Ethnicity: Indian
-Glasses: No
-section 1, Capture time: 2012-06-11 15:33:35
-section 2, Capture time: 2012-06-18 11:35:38

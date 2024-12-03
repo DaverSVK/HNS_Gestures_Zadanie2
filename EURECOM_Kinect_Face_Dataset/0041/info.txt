@@ -1,7 +1,0 @@
-ID: 41
-Gender: Male
-Year of born: 1981
-Ethnicity: Asian(Chinese)
-Glasses: Yes
-section 1, Capture time: 2012-06-15 10:06:09
-section 2, Capture time: 2012-06-20 10:33:59

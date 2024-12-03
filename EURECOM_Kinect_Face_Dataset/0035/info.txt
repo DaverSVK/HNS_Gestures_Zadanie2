@@ -1,7 +1,0 @@
-ID: 35
-Gender: Female
-Year of born: 1987
-Ethnicity: Black
-Glasses: No
-section 1, Capture time: 2012-06-11 17:26:10
-section 2, Capture time: 2012-06-18 16:49:03

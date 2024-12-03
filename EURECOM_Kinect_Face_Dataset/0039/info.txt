@@ -1,7 +1,0 @@
-ID: 39
-Gender: Male
-Year of born: 1984
-Ethnicity: White
-Glasses: No
-section 1, Capture time: 2012-06-12 14:04:02
-section 2, Capture time: 2012-06-22 11:35:50

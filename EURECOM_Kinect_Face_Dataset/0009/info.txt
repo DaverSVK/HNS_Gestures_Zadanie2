@@ -1,7 +1,0 @@
-ID: 9
-Gender: Male
-Year of born: 1984
-Ethnicity: Middle East/Maghreb
-Glasses: Yes
-section 1, Capture time: 2012-06-11 12:44:38
-section 2, Capture time: 2012-07-05 15:34:32

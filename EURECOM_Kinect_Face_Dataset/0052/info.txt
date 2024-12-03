@@ -1,7 +1,0 @@
-ID: 52
-Gender: Female
-Year of born: 1982
-Ethnicity: Hispanics
-Glasses: No
-section 1, Capture time: 2012-06-20 11:08:53
-section 2, Capture time: 2012-06-25 12:25:54

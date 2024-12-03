@@ -1,7 +1,0 @@
-ID: 2
-Gender: Male
-Year of born: 1986
-Ethnicity: Asian(Chinese)
-Glasses: Yes
-section 1, Capture time: 2012-06-11 11:22:52
-section 2, Capture time: 2012-06-18 16:45:34

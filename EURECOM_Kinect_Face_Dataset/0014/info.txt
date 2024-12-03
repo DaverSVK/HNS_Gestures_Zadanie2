@@ -1,7 +1,0 @@
-ID: 14
-Gender: Female
-Year of born: 1984
-Ethnicity: Middle East/Maghreb
-Glasses: No
-section 1, Capture time: 2012-06-11 14:05:38
-section 2, Capture time: 2012-06-22 11:12:13

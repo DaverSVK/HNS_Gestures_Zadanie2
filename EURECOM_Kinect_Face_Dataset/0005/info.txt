@@ -1,7 +1,0 @@
-ID: 5
-Gender: Male
-Year of born: 1980
-Ethnicity: White
-Glasses: No
-section 1, Capture time: 2012-06-11 11:45:08
-section 2, Capture time: 2012-06-18 14:45:04

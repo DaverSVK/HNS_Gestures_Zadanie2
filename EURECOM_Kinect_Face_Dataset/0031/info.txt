@@ -1,7 +1,0 @@
-ID: 31
-Gender: Female
-Year of born: 1985
-Ethnicity: Middle East/Maghreb
-Glasses: Yes
-section 1, Capture time: 2012-06-11 17:05:54
-section 2, Capture time: 2012-06-20 11:29:13

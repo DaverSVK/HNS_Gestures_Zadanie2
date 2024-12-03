@@ -1,7 +1,0 @@
-ID: 26
-Gender: Male
-Year of born: 1987
-Ethnicity: White
-Glasses: Yes
-section 1, Capture time: 2012-06-11 16:09:02
-section 2, Capture time: 2012-07-05 15:24:31
